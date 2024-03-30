@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Trivy File Scan') {
             steps {
-                sh'trivy fs > trivy-report.txt'
+                sh 'trivy fs --format table -o trivy-fs-report.html .'
             }
         }
         stage('S3 Bucket Backup') {
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh 'docker build -t adikesavanaidug2404/boardgame:v1 .'
+                        sh 'docker build -t adikesavanaidug2404/boardgame:latest .'
                         
                     }
                 }
@@ -39,14 +39,14 @@ pipeline {
         }
         stage('Trivy Image Scan') {
             steps {
-                sh 'trivy image adikesavanaidug2404/boardgame:v1 > trivy-report.txt'
+                sh 'trivy image --format table -o trivy-image-report.html adikesavanaidug2404/boardgame:latest '
             }
         }
         stage('Docker Push') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh 'docker push adikesavanaidug2404/boardgame:v1'
+                        sh 'docker push adikesavanaidug2404/boardgame:latest'
                         
                     }
                 }
@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh 'docker run -d -p 3000:3000 adikesavanaidug2404/boardgame:v1'
+                        sh 'docker run -d -p 8083:8080 adikesavanaidug2404/boardgame:latest'
                         
                     }
                 }
