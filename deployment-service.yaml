@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: boardgame
-  replicas: 1 # Number of replicas that will be created for this deployment
+  replicas: 2 # Number of replicas that will be created for this deployment
   template:
     metadata:
       labels:
@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
         - name: boardgame
-          image: adikesavanaidug2404/boardgame:v1 # Image that will be used to containers in the cluster
+          image: adijaiswal/boardgame:latest # Image that will be used to containers in the cluster
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000 # The port that the container is running on in the cluster
+            - containerPort: 8080 # The port that the container is running on in the cluster
 
 
 ---
@@ -31,6 +31,6 @@ spec:
     app: boardgame
   ports:
     - protocol: "TCP"
-      port: 3000 # The port that the service is running on in the cluster
-      targetPort: 3000 # The port exposed by the service
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8080 # The port exposed by the service
   type: LoadBalancer # type of the service.
